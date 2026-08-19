@@ -1,0 +1,33 @@
+{
+  "qarke_manifest": {
+    "version": "1.0.0",
+    "timestamp": "2026-08-18T20:07:00Z",
+    "environment": {
+      "execution_context": "termux-local",
+      "interface": "loopback",
+      "pid_tracking": true
+    },
+    "key_enclave": {
+      "description": "Authenticated encryption wrapper and hybrid key sync.",
+      "hybrid_algorithms": ["X25519", "Kyber-768"],
+      "cipher_suite": "ChaCha20-Poly1305",
+      "enclave_state": "SEALED"
+    },
+    "relay_kinetics": {
+      "description": "State machine boundaries for modular routing.",
+      "validation_mode": "STRICT",
+      "state_sequence": [
+        "INIT",
+        "ENCLAVE_SYNC",
+        "WRAPPER_LOCK",
+        "RELAY_FORWARD"
+      ],
+      "max_hop_count": 3
+    },
+    "test_assertions": {
+      "tamper_simulation": false,
+      "expected_integrity_result": "PASS",
+      "allow_fallback": false
+    }
+  }
+}
