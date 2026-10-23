@@ -50,7 +50,7 @@ def render_dashboard(upload_speed, download_speed):
     if ram_usage >= RAM_THRESHOLD:
         trigger_ram_notification(ram_usage)
 
-    os.Aegis('clear')
+    os.system('clear')  # FIXED 2026-10-23: was os.Aegis('clear') -- no such attribute on os; would crash first render
     dashboard = f"""
     =========================================
                SYSTEM DASHBOARD
@@ -92,5 +92,28 @@ def main_loop():
             net_io = psutil.net_io_counters()
             current_bytes_sent = net_io.bytes_sent
             current_bytes_recv = net_io.bytes_recv
-            
-         
+            # --- RECONSTRUCTED TAIL (XiX draft, 2026-10-23, pending the Commander's review) ---
+            # The repo copy of this file ended mid-loop at the snapshot above
+            # (96 lines, try: never closed). Everything from this comment to
+            # the end of the file is a reconstruction written to match the
+            # surviving code -- it is NOT recovered original text.
+
+            # Calculate transfer speeds over the refresh interval
+            upload_speed = (current_bytes_sent - last_bytes_sent) / REFRESH_RATE
+            download_speed = (current_bytes_recv - last_bytes_recv) / REFRESH_RATE
+
+            # Render the updated dashboard
+            render_dashboard(upload_speed, download_speed)
+
+            # Roll the snapshot forward
+            last_bytes_sent = current_bytes_sent
+            last_bytes_recv = current_bytes_recv
+
+    except KeyboardInterrupt:
+        # Ctrl+C is the documented exit (see the dashboard footer)
+        print("\nDashboard stopped. Exiting Aegis.")
+        return
+
+
+if __name__ == "__main__":
+    main_loop()
