@@ -3679,6 +3679,7 @@ def do_connect(host: str, port: int, keyfile: str, peer_key_hex: str | None,
     id_priv, id_pub, id_pub_scheme = load_identity_v15(keyfile)
     id_scheme = id_pub_scheme
     sock = socket.create_connection((host, port), timeout=15)
+    sock.settimeout(None)  # clear the 15s connect timeout; the chat reader blocks indefinitely
     print(f"[*] connected to {host}:{port} — handshaking…")
     tun = Tunnel(sock, id_priv, id_pub, id_scheme, "init",
                  bytes.fromhex(peer_key_hex) if peer_key_hex else None,
